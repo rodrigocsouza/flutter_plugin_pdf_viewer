@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_plugin_pdf_viewer/src/page.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart';
 
 class PDFDocument {
   static const MethodChannel _channel =
@@ -82,11 +81,11 @@ class PDFDocument {
     assert(page > 0);
     var data = await _channel
         .invokeMethod('getPage', {'filePath': _filePath, 'pageNumber': page});
-    return new PDFPage(data);
+    return new PDFPage(data, page);
   }
 
   // Stream all pages
-  Observable<PDFPage> getAll() {
+  Stream<PDFPage> getAll() {
     return Future.forEach<PDFPage>(List(count), (i) async {
       final data = await _channel
           .invokeMethod('getPage', {'filePath': _filePath, 'pageNumber': i});
